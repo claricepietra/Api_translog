@@ -4,3 +4,4 @@ const VeiculoController = require("../controllers/VeiculoController.js");
 
 router.get("/Veiculos", VeiculoController.listar);
 router.get("/Veiculos/:id", VeiculoController.buscarPorId);
+router.post("/Veiculos", VeiculoController.cadastrar);

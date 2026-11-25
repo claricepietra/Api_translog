@@ -54,4 +54,37 @@ class VeiculoController {
       return VeiculoController.tratarErro(res, erro);
     }
   }
+  
+
+
+    static async cadastrar(req, res){
+    try{
+        const { cd_placa, nm_modelo, ds_categoria } = req.body;
+        const valorDiariaFrete = req.body.vl_diaria_frete;
+        const quilometragem = req.body.qt_quilometragem;
+        if(!cd_placa || !nm_modelo || !ds_categoria){
+            return res.status(400).json(VeiculoView .erro("Os campos cd_sku, nm_produto, ds_categoria são obrigatorios", 400));
+        }
+
+        const vl_diaria_frete = Number(valorDiariaFrete);
+        const qt_quilometragem = quilometragem !== undefined ? parseInt(quilometragem, 10) : 0;
+
+        if(isNaN(vl_diaria_frete) || vl_diaria_frete <= 0 || isNaN(qt_quilometragem) || qt_quilometragem < 0){
+            return res.status(422).json(VeiculoView.erro("Erro 422: o vl_preco deve ser maior que zero e qt_estoque nao pode ser negativo.", 422));
+        }
+
+        const novoRegistro = await VeiculoModel.cadastrar({
+            cd_placa: String(cd_placa).trim().toUpperCase(),
+            nm_modelo: String(nm_modelo).trim(),
+            ds_categoria: String(ds_categoria).trim(),
+            vl_diaria_frete: vl_diaria_frete,
+            qt_quilometragem: qt_quilometragem
+        });
+
+        return res.status(201).json(VeiculoView.sucesso("Registro cadastrado com sucesso", novoRegistro, 201));
+    }catch(erro){
+    
+        return VeiculoController.tratarErro(res, erro);
+    }
+}
 }
