@@ -33,6 +33,31 @@ class VeiculoModel {
         return rows[0] || null;
     }
 
+    static async cadastrar(veiculo) {
+
+        const sql = `INSERT INTO tb_veiculos (cd_placa, nm_modelo, ds_categoria, vl_diaria_frete, qt_quilometragem)VALUES (?, ?, ?, ?, ?)`;
+
+        //Monta o array de valores na mesma ordem de colunas acima 
+        const valores = [
+            veiculo.cd_placa,
+            veiculo.nm_modelo,
+            veiculo.ds_categoria,
+            veiculo.vl_diaria_frete,
+            veiculo.qt_quilometragem ?? 0
+        ];
+
+        const [resultado] = await pool.query(sql, valores);
+
+        return {
+            id_veiculo: resultado.insertId,
+            cd_placa: veiculo.cd_placa,
+            nm_modelo: veiculo.nm_modelo,
+            ds_categoria: veiculo.ds_categoria,
+            vl_diaria_frete: veiculo.vl_diaria_frete,
+            qt_quilometragem: veiculo.qt_quilometragem ?? 0
+        };
+    }
+
 }
 
 module.exports = VeiculoModel;
